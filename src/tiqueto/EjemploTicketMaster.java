@@ -13,19 +13,19 @@ public class EjemploTicketMaster {
 	public static int TOTAL_ENTRADAS = 10;
 
 	// El número de entradas que reponerá cada vez el promotor
-	public static int REPOSICION_ENTRADAS = 2;
+	public static int REPOSICION_ENTRADAS = 3;
 
 	// El número máximo de entradas por fan
-	public static int MAX_ENTRADAS_POR_FAN = 10;
+	public static int MAX_ENTRADAS_POR_FAN = 9;
 
 	// El número total de fans
-	public static int NUM_FANS = 5;
+	public static int NUM_FANS = 3;
 
 	public static void main(String[] args) throws InterruptedException {
 
 		String mensajeInicial = "[ Empieza la venta de tickets. Se esperan %d fans, y un total de %d entradas ]";
 		System.out.println(String.format(mensajeInicial, NUM_FANS, TOTAL_ENTRADAS));
-		WebCompraConciertos webCompra = new WebCompraConciertos();
+		WebCompraConciertos webCompra = new WebCompraConciertos(TOTAL_ENTRADAS);
 		PromotoraConciertos liveNacion = new PromotoraConciertos(webCompra);
 		List<FanGrupo> fans = new ArrayList<>();
 
@@ -41,6 +41,11 @@ public class EjemploTicketMaster {
 
 		//Esperamos a que el promotor termine, para preguntar a los fans cu�ntas entradas tienen compradas
 		liveNacion.join();
+
+		// Esperamos a que todos los fans terminen
+		for (FanGrupo fan : fans) {
+			fan.join();
+		}
 
 		System.out.println("\n [ Terminada la fase de venta - Sondeamos a pie de calle a los compradores ] \n");
 		System.out.println("Total entradas ofertadas: " + TOTAL_ENTRADAS);
